@@ -1,0 +1,13 @@
+# Ignore the virtual environment folder
+venv/
+.venv/
+ENV/
+
+# Ignore Python cache and runtime metadata logs
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Pytest runtime tracking folder
+.pytest_cache/
