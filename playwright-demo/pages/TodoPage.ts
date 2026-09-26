@@ -1,30 +1,37 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class TodoPage {
-    // 1 Define member variables with Typescript types
-    readonly page: Page;
-    readonly todoInput: Locator;
-    readonly firstItem: Locator;
+  readonly page: Page;
+  readonly todoInput: Locator;
+  readonly firstItem: Locator;
+  readonly toggleCheckbox: Locator;
 
-    // 2. The Constructor initializes the page and locators
-    constructor(page: Page) {
-        this.page = page;
-        this.todoInput = page.getByPlaceholder('What needs to be done?');
-        this.firstItem = page.getByTestId('todo-title');
-    }
+  constructor(page: Page) {
+    this.page = page;
+    this.todoInput = page.getByPlaceholder('What needs to be done?');
+    this.firstItem = page.getByTestId('todo-title');
+    this.toggleCheckbox = page.getByRole('checkbox', { name: 'Toggle Todo' });
+  }
 
-    // 3. Action Methods
-    async goto() {
-        await this.page.goto('https://demo.playwright.dev/todomvc');
-    }
+  async goto() {
+    await this.page.goto('https://demo.playwright.dev/todomvc');
+  }
 
-    async addTodo(text: string) {
-        await this.todoInput.fill(text);
-        await this.todoInput.press('Enter');
-    }
+  async addTodo(text: string) {
+    await this.todoInput.fill(text);
+    await this.todoInput.press('Enter');
+  }
 
-    // 4. Assertion Methods
-    async assertFirstItemText(expectedText: string) {
-        await expect(this.firstItem).toHaveText(expectedText);
-    }
+  async markFirstAsComplete() {
+    await this.toggleCheckbox.check();
+  }
+
+  async assertFirstItemText(expectedText: string) {
+    await expect(this.firstItem).toHaveText(expectedText);
+  }
+
+  async assertFirstItemCompleted() {
+    const firstListItem = this.page.locator('ul.todo-list li').first();
+    await expect(firstListItem).toHaveClass(/completed/);
+  }
 }
